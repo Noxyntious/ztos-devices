@@ -1,0 +1,62 @@
+[device]
+codename = "xiaomi-daisy"
+name = "Xiaomi Mi A2 Lite"
+arch = "aarch64"
+status = "untested"
+origin = "pmos"
+
+[source.pmos]
+pmaports_commit = "2254bfcf53d13d79136e9c5187480a3582f32cad"
+# device-xiaomi-daisy is archived in favour of the generic msm8953 port
+# (lk2nd + extlinux), which pmOS installs on daisy too
+device_pkg = "device-qcom-msm8953"
+kernel_pkg = "linux-postmarketos-qcom-msm8953"
+# firmware-qcom-msm8953 carries daisy's a506 zap shader (qcom/msm8953/xiaomi/daisy);
+# Wi-Fi, modem and DSP firmware are read off the phone's own partitions by
+# msm-firmware-loader (overlay)
+firmware_pkgs = ["firmware-qcom-adreno-a530", "firmware-qcom-msm8953"]
+category = "community"
+
+[kernel]
+mainline = true
+version = "7.1.3"
+artifacts_sha256 = "3baf92d93e263dceab0bf361f721f437473169db609cd966cde80300d17d3718"
+soc = "msm8953"
+gpu_driver = "freedreno"
+
+[boot]
+flash_method = "fastboot"
+# lk2nd is only picked by itself for Samsung phones: named here. It stays on
+# boot and boots extlinux from the boot partition inside userdata
+lk2nd = "lk2nd-msm8953"
+bootimg_header_version = 0
+kernel_offset = "0x00008000"
+ramdisk_offset = "0x01000000"
+tags_offset = "0x00000100"
+base = "0x80000000"
+second_offset = "0x00f00000"
+pagesize = 2048
+# one dtb: the generic port lists globs, and ztConflo takes the first word
+dtb = "qcom/msm8953-xiaomi-daisy"
+cmdline = "quiet loglevel=2"
+append_dtb = true
+qcdt = false
+sparse = true
+rootfs_target = "userdata"
+defaulted = ["bootimg_header_version"]
+
+[userspace]
+# msm-firmware-loader before udev, so the Wi-Fi, modem and audio DSPs find their
+# firmware at boot; msm-modem-uim-selection selects the SIM before ModemManager
+daemons = ["msm-firmware-loader", "msm-firmware-loader-unpack", "rmtfs", "msm-modem-uim-selection", "bluetooth"]
+
+[ztmetro]
+# 1080 px wide: ztMETRO's 360 points across
+scale = 3.0
+vibrator = "auto"
+rotation = 0
+
+[verified]
+date = ""
+by = ""
+checklist = {}

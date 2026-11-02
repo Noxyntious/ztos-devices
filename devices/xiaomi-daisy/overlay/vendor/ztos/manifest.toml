@@ -1,0 +1,20 @@
+# ztOSIAL manifest: Xiaomi Mi A2 Lite (xiaomi-daisy), Snapdragon 625 (msm8953),
+# on postmarketOS's mainline msm8953 kernel. Every interface is generic: the
+# hardware is standard Linux; these are this phone's parameters.
+
+[device]
+codename = "xiaomi-daisy"
+name = "Xiaomi Mi A2 Lite"
+form_factor = "phone"
+scale = 3.0                      # 1080 px panel: ztMETRO's 360 points across
+
+[gsi]
+min = "0.2.0"
+
+[ial.Power1]
+backend = "generic"
+battery = "/sys/class/power_supply/qcom-battery"
+charger = "/sys/class/power_supply/qcom-smbchg-usb"
+
+[boot]
+usb_gadget_udc = "7000000.usb"
