@@ -42,13 +42,38 @@ append_dtb = true
 qcdt = false
 sparse = true
 rootfs_target = "userdata"
+# The modem, which msm89x7-mainline's land device tree leaves off: switched on
+# as its msm8937/8917 siblings do (msm8917-xiaomi-ugglite: the modem with
+# PM8937 S1 and L7, its memory, memshare, bam-dmux for mobile data)
+dtb_enable = [
+	"/soc@0/remoteproc@4080000",
+	"/soc@0/remoteproc@4080000/bam-dmux",
+	"/soc@0/dma-controller@4044000",
+	"/reserved-memory/mpss@86800000",
+	"/reserved-memory/mba",
+	"/reserved-memory/gps",
+	"/memshare",
+]
+dtb_set = [
+	# 80 MiB, land's own downstream size (msm8937.dtsi's modem_region)
+	["/reserved-memory/mpss@86800000", "reg", "x", "0 0x86800000 0 0x5000000"],
+	# S1 has no phandle in this dtb (nothing referenced it): one of its own
+	["/remoteproc/smd-edge/rpm-requests/regulators-0/s1", "phandle", "x", "0xfff0"],
+	["/soc@0/remoteproc@4080000", "mss-supply", "x", "0xfff0"],
+	# L7's phandle in this dtb: recheck it (and S1's freedom) when the kernel
+	# changes, as artifacts_sha256 will
+	["/soc@0/remoteproc@4080000", "pll-supply", "x", "0x24"],
+]
 defaulted = ["bootimg_header_version"]
 
 [userspace]
-# msm-firmware-loader before udev, so the Wi-Fi and audio DSPs find their
-# firmware at boot. No modem daemons: land's mainline device tree leaves the
-# modem off. ztos-virtualkeyd: the capacitive keys (overlay etc/ztos/virtualkeys.conf)
-daemons = ["msm-firmware-loader", "msm-firmware-loader-unpack", "bluetooth", "ztos-virtualkeyd"]
+# msm-firmware-loader before udev, so the Wi-Fi, modem and audio DSPs find their
+# firmware at boot; rmtfs, the modem's file system; msm-modem-uim-selection
+# selects the SIM and msm-modem-wwan-port opens the bam-dmux data port, both
+# before ModemManager (pmOS's soc-qcom-msm89x7-modem). ztos-virtualkeyd: the
+# capacitive keys (overlay etc/ztos/virtualkeys.conf)
+daemons = ["msm-firmware-loader", "msm-firmware-loader-unpack", "rmtfs", "msm-modem-uim-selection",
+           "msm-modem-wwan-port", "bluetooth", "ztos-virtualkeyd"]
 
 [ztmetro]
 # 720 px wide: ztMETRO's 360 points across
