@@ -2,7 +2,7 @@
 codename = "xiaomi-daisy"
 name = "Xiaomi Mi A2 Lite"
 arch = "aarch64"
-status = "untested"
+status = "tested"
 origin = "pmos"
 
 [source.pmos]
@@ -58,6 +58,6 @@ vibrator = "auto"
 rotation = 0
 
 [verified]
-date = ""
-by = ""
-checklist = {}
+date = "2026-11-06"
+by = "eri"
+checklist = {ztmetro = "pass", display = "pass", touch = "pass", gpu = "pass", wifi = "pass", vibrator = "pass", audio = "pass", battery = "pass", suspend = "pass", modem = "pass", ial = "pass", android = "n/a"}
