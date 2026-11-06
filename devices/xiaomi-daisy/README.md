@@ -8,9 +8,10 @@ picks daisy's device tree. Every ztOSIAL interface uses its generic backend.
 ## Booting
 
 lk2nd (`lk2nd-msm8953`) sits on `boot` and boots extlinux from the ext2 boot
-partition inside `userdata`, so `flash.sh` writes only `userdata`. A phone
-that has run postmarketOS already has lk2nd: hold Vol-Down at power-on for
-lk2nd's fastboot. A stock phone needs lk2nd once, from Xiaomi's fastboot:
+partition inside `userdata`, so `flash.sh` writes only `userdata`, from
+Xiaomi's fastboot (hold Vol-Down at power-on: the bootloader catches the key
+before lk2nd starts). A phone that has run postmarketOS already has lk2nd; a
+stock phone needs it once, from the same fastboot:
 `fastboot flash boot lk2nd.img` (the active slot; `fastboot getvar
 current-slot`).
 
