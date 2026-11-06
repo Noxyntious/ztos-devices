@@ -1,0 +1,12 @@
+# ztOSIAL manifest: Xiaomi Redmi 3S (xiaomi-land), Snapdragon 430 (msm8937),
+# on postmarketOS's mainline msm89x7 kernel. Every interface is generic: the
+# hardware is standard Linux; these are this phone's parameters.
+
+[device]
+codename = "xiaomi-land"
+name = "Xiaomi Redmi 3S"
+form_factor = "phone"
+scale = 2.0                      # 720 px panel: ztMETRO's 360 points across
+
+[gsi]
+min = "0.2.0"
