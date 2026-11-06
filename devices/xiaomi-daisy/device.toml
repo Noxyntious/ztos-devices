@@ -48,7 +48,8 @@ defaulted = ["bootimg_header_version"]
 [userspace]
 # msm-firmware-loader before udev, so the Wi-Fi, modem and audio DSPs find their
 # firmware at boot; msm-modem-uim-selection selects the SIM before ModemManager
-daemons = ["msm-firmware-loader", "msm-firmware-loader-unpack", "rmtfs", "msm-modem-uim-selection", "bluetooth"]
+# q6voiced: call audio (opens the DSP's voice stream while a call is up)
+daemons = ["msm-firmware-loader", "msm-firmware-loader-unpack", "rmtfs", "msm-modem-uim-selection", "bluetooth", "q6voiced"]
 
 [ztmetro]
 # 1080 px wide: ztMETRO's 360 points across

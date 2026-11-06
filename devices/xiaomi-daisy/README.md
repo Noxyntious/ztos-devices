@@ -19,10 +19,10 @@ current-slot`).
 Tested on the phone: display and GPU (freedreno, OpenGL ES 3.1), touch,
 power and volume keys, vibration, battery and charging, backlight, light
 sensor, accelerometer, gyroscope, notification LED, Wi-Fi (2.4 and 5 GHz), Bluetooth
-(controller up), speaker, USB networking and SSH. The modem starts and
-serves QMI; with no SIM inserted ModemManager reports `sim-missing`, so SIM,
-calls, SMS and mobile data are untested. Not started: call audio (q6voiced),
-cameras, GPS.
+(controller up), speaker, USB networking and SSH. The modem: SIM, network
+(LTE), calls both ways with sound (q6voiced) and SMS both ways, through
+ztOSMobile's ztoscorenetworkingd-mm over ModemManager. Untested: mobile data.
+Not started: cameras, GPS.
 
 Waydroid is off: pmOS's msm8953 kernel has binder with fixed devices but
 not binderfs (`CONFIG_ANDROID_BINDERFS`), which ztOS's Waydroid needs.
@@ -37,8 +37,9 @@ not binderfs (`CONFIG_ANDROID_BINDERFS`), which ztOS's Waydroid needs.
 | `usr/lib/msm-modem-uim-selection`, its unit, `etc/systemd/system/rmtfs.service.d/` | postmarketOS's msm-modem 13 (selects the SIM's USIM application before ModemManager) | GPL-3.0-or-later, in `usr/share/licenses/msm-modem` |
 | `usr/share/alsa/ucm2/` (`conf.d/xiaomi-daisy`, `Xiaomi/daisy`, `codecs/msm8953-wcd`) | msm8953-mainline's alsa-ucm-conf at `ed9334bda853fe032794751c34cea03ec0d7d4eb`, the commit pmaports' `soc-qcom-msm8953-ucm` uses | BSD-3-Clause, `Xiaomi/daisy/LICENSE.alsa-ucm-conf` |
 | `etc/wireplumber/wireplumber.conf.d/51-qcom.conf` | pmaports `soc-qcom-msm8953` (S16LE, 48 kHz, larger periods for the DSP) | |
+| `usr/local/bin/q6voiced`, `etc/systemd/system/q6voiced.service` | built by `userspace/Makefile` from postmarketOS's q6voiced (commit `75ae407`) with tinyalsa 2.0.0 linked in; opens the voice PCM (`hw:0,4`, VoiceMMode1, as pmOS's `soc-qcom-msm8953`) while ModemManager has a call up, which starts call audio. The UCM HiFi verb already routes VoiceMMode1 to the earpiece codec and from the microphone | MIT (q6voiced), BSD-3-Clause (tinyalsa), in `usr/share/licenses` |
 | `etc/modules-load.d/ledtrig-timer.conf` | the notification LED blinks with the timer trigger, a module in this kernel | |
 | `vendor/ztos/manifest.toml` | ztOSIAL manifest: generic backends, the battery and charger, the USB controller | |
 
-To rebuild the userspace binaries, on aarch64 Arch Linux ARM:
+To rebuild the userspace binaries (rmtfs, qrtr, q6voiced), on aarch64 Arch Linux ARM:
 `make -C userspace install`.

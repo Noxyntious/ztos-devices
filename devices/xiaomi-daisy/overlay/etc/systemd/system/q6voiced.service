@@ -1,0 +1,12 @@
+[Unit]
+Description=Call audio: the audio DSP's voice stream while ModemManager has a call up (q6voiced)
+# as postmarketOS's soc-qcom-msm8953: card 0, device 4 (VoiceMMode1)
+After=dbus.service ModemManager.service
+
+[Service]
+ExecStart=/usr/local/bin/q6voiced hw:0,4
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
