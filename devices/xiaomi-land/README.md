@@ -15,14 +15,19 @@ goes once on the one `boot` partition, `fastboot flash boot lk2nd.img`.
 
 ## State
 
-Untested on the phone yet. From the device tree: display (three panels, BOE,
+Boots to ztMETRO; Wi-Fi, touch, the keys and USB networking work on the phone. From the device tree: display (three panels, BOE,
 Tianma and EBBG, all in the initramfs), touch (FocalTech FT5306), Wi-Fi
 (WCN3620), audio (PM8937 codec; speaker through an AW8738 amplifier on HPHR),
 an RGB notification LED (AW2013), battery and charger (PMI8950).
 
 **No modem**: msm89x7-mainline's land device tree does not enable the modem
 (`&modem` stays disabled), so there are no calls, SMS or mobile data until it
-does. The capacitive buttons under the screen are not in the device tree.
+does.
+
+The capacitive keys under the glass are touches the FT5306 reports below the
+panel (y = 2000; x = 180, 540, 900): ztOSMobile's `ztos-virtualkeyd` turns them
+into menu, home and back from `etc/ztos/virtualkeys.conf`, and ztMETRO then
+draws no nav bar.
 
 ## Where the overlay's files come from
 
@@ -32,4 +37,5 @@ does. The capacitive buttons under the screen are not in the device tree.
 | `usr/share/alsa/ucm2/` (`conf.d/xiaomi-land`, `Xiaomi/riva`, `codecs/msm8953-wcd`) | msm89x7-mainline's alsa-ucm-conf at `6078de44affd1023c1ba4f71ef1e21468e3282e9`, the commit pmaports' `soc-qcom-msm89x7` uses (land's profile is riva's) | BSD-3-Clause, `Xiaomi/riva/LICENSE.alsa-ucm-conf` |
 | `etc/wireplumber/wireplumber.conf.d/51-qcom.conf` | pmaports `soc-qcom-msm89x7` | |
 | `etc/modules-load.d/ledtrig-timer.conf` | the notification LED blinks with the timer trigger | |
+| `etc/ztos/virtualkeys.conf` | the capacitive keys' boxes for ztos-virtualkeyd, measured on the phone | |
 | `vendor/ztos/manifest.toml` | ztOSIAL manifest: generic backends | |
