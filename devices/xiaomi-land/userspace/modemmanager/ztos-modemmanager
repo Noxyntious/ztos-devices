@@ -1,0 +1,15 @@
+#!/bin/sh
+# ModemManager's daemon for land (userspace/modemmanager in the ztOS registry),
+# built without the request the modem firmware crashes on. It must match the
+# plugins and libmm-glib pacman installed: if pacman has moved ModemManager to
+# another version, Arch's own daemon runs instead (and the modem will crash
+# again when enabled) until it is rebuilt.
+dir=/usr/local/lib/ztos-modemmanager
+built=$(cat "$dir/version" 2>/dev/null)
+have=$(pacman -Q modemmanager 2>/dev/null | cut -d' ' -f2)
+have=${have%-*}
+if [ -n "$built" ] && [ "$built" = "$have" ] && [ -x "$dir/ModemManager" ]; then
+	exec "$dir/ModemManager" "$@"
+fi
+echo "ztos-modemmanager: built for ModemManager ${built:-?}, pacman has ${have:-?}: running Arch's own" >&2
+exec /usr/bin/ModemManager "$@"

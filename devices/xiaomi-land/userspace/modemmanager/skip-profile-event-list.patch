@@ -1,0 +1,15 @@
+--- a/src/mm-broadband-modem-qmi.c
++++ b/src/mm-broadband-modem-qmi.c
+@@ -7310,7 +7310,11 @@
+         /* Fall through */
+ 
+     case REGISTER_PROFILE_REFRESH_STEP_CONFIGURE_PROFILE_EVENT:
+-        if (ctx->client_wds) {
++        /* ztOS (xiaomi-land): the Redmi 3S's MPSS.JO.1.2 firmware (2016)
++         * crashes on WDS Configure Profile Event List, as the Quectel BG96
++         * does (ModemManager issue #795), so it is never sent. Profile
++         * changes made by others are then not reported; nothing else is lost. */
++        if (FALSE && ctx->client_wds) {
+             g_autoptr(QmiMessageWdsConfigureProfileEventListInput)     input = NULL;
+             g_autoptr(GArray)                                          array = NULL;
+             QmiMessageWdsConfigureProfileEventListInputRegisterElement element = {0};

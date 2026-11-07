@@ -63,6 +63,14 @@ dtb_set = [
 	# L7's phandle in this dtb: recheck it (and S1's freedom) when the kernel
 	# changes, as artifacts_sha256 will
 	["/soc@0/remoteproc@4080000", "pll-supply", "x", "0x24"],
+	# SMSM doorbells as legacy syscon writes (APCS 0xb011008, bits 13 and 19).
+	# smsm's mboxes starts with <0>, so fw_devlink never links it to the APCS
+	# mailbox; smsm probes first, its channel requests defer and it silently
+	# ends up with no doorbell. The modem then never sees bam-dmux's acks and
+	# never opens a channel (no wwan0, ModemManager: "no net port").
+	# 0x6 is the APCS mailbox (mailbox@b011000) phandle: recheck it with L7's.
+	["/smsm", "qcom,ipc-1", "x", "0x6 0x8 0xd"],
+	["/smsm", "qcom,ipc-3", "x", "0x6 0x8 0x13"],
 ]
 defaulted = ["bootimg_header_version"]
 
@@ -74,6 +82,10 @@ defaulted = ["bootimg_header_version"]
 # capacitive keys (overlay etc/ztos/virtualkeys.conf)
 daemons = ["msm-firmware-loader", "msm-firmware-loader-unpack", "rmtfs", "msm-modem-uim-selection",
            "msm-modem-wwan-port", "bluetooth", "ztos-virtualkeyd"]
+# ModemManager without WDS "Configure Profile Event List", which land's modem
+# firmware crashes on (userspace/modemmanager/Makefile); built in the root
+build = ["modemmanager"]
+build_deps = ["meson", "glib2-devel"]
 
 [ztmetro]
 # 720 px wide: ztMETRO's 360 points across
